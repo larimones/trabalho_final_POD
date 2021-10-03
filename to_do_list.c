@@ -17,8 +17,9 @@ struct task_sheet {
 typedef struct task_sheet Task;
 
 // list in alphabetic order
-// serch
+//update task
 
+// serch
 
 Task *getLast(Task *al)
 {
@@ -70,19 +71,63 @@ void insTask()
 {
      return;
 }
-//update task
+
 
 //  menu da aplicação e retorna a opção selecionada
 int menu()
-{
-    int op=0;
-    while (op!=EXIT)
-    {
-        printf("%d Finaliza",EXIT);
-        printf("\n: ");
-        scanf("%d",&op);
-       
-    }
-    return op;
-}
+{  
+  int op;
+  int i, j, tasks;
+  char str[50][50],temp[50];
+  Task * first = NULL, *text = NULL;
+  FILE *file;
+  
+  file = fopen("teste.txt", "r");
+  if (file == NULL){
+    printf("Vazio");
+    system("pause");
+    return 0;
+  }
+ while (op != 0) { 
+  printf("=============== WELCOME TO YOUR TASKS ===================");
+  printf("|| 1 - Criar nova tarefa;                               ||");
+  printf("|| 2 - Deletar tarefa;                                  ||");
+  printf("|| 3 - Atualizar prioridade e data de entrega;          ||");
+  printf("|| 4 - Listar todas as tarefas;                         ||");
+  printf("|| 5 - Procurar tarefa por nome;                        ||");
+  printf("==========================================================");
+  scanf("%d", &op);
+    if (op == 1) 
+    { 
+  
 
+  
+  file = tefopen("teste.txt", "r");
+  //lembrar que "tasks" que conter um arquivo txt com as tarefas
+
+ 
+   //puts("Enter Strings one by one: ");
+   //for(i=0;i<=tasks;i++)
+      //gets(str[i]);
+   for(i=0; i <= tasks; i++){
+   // a partir daqui começa a ordenação 
+      for(j=i+1; j <= tasks; j++){
+         if(strcmp(str[i], str[j]) >0){
+            strcpy(temp,str[i]);
+            strcpy(str[i],str[j]);
+            strcpy(str[j],temp);
+         }
+      }
+   printf("Tasks in Alphabetic order :");
+   for(i=0;i <= tasks; i++)
+      puts(str[i]);
+   return 0;
+  }
+}
+ int op=0;
+    while (op!=EXIT){
+      printf("%d = QUIT",EXIT);
+      printf("\n: ");
+      scanf("%d",&op);
+      return op;
+    }
