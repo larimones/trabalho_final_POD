@@ -3,11 +3,25 @@
 #include <string.h>
 #define EXIT 10
 
+
+
+
+/**
+ * @brief estrutura para Data
+ * 
+ */
 typedef struct {
   int dia;
   int mes;
 } Date;
 
+
+
+
+/**
+ * @brief -> Struct para a task sheet
+ * 
+ */
 struct task_sheet {
   char name[50];
   int priority;
@@ -16,21 +30,38 @@ struct task_sheet {
 };
 typedef struct task_sheet Task;
 
+
+
+
+
+
 // list in alphabetic order
 //update task
 
 // serch
 
-Task *getLast(Task *al)
-{
+
+/**
+ * @brief Get the Last object
+ * 
+ * @param al 
+ * @return Task* 
+ */
+Task *getLast(Task *al) {
   Task *text;
   for (text=al;text->next!=NULL;text=text->next);
   return text;
 }
 
-//new task
-Task *newtask(Task *REC)
-{
+
+
+/**
+ * @brief Create a new task
+ * 
+ * @param REC 
+ * @return Task* 
+ */
+Task *newTask(Task *REC) {
   Task *NEW, *text;
 
   NEW = (Task *)malloc(sizeof(Task));
@@ -49,8 +80,17 @@ Task *newtask(Task *REC)
   text-> next = NEW; // revisar
   return REC;
 }
-//delete task
-Task *deletetask(Task *first, char deletechar[50]){
+
+
+
+/**
+ * @brief Delete task
+ * 
+ * @param first 
+ * @param deletechar 
+ * @return Task* 
+ */
+Task *deleteTask(Task *first, char deletechar[50]){
   Task *text, *ant = NULL;
   for(text = first; text != NULL; text = text -> next){
     if (strcmp(text -> name, deletechar) == 0){
@@ -82,7 +122,8 @@ int menu()
   Task * first = NULL, *text = NULL;
   FILE *file;
   
-  file = fopen("teste.txt", "r");
+  file = fopen("teste.txt", "rt");
+
   if (file == NULL){
     printf("Vazio");
     system("pause");
@@ -131,3 +172,20 @@ int menu()
       scanf("%d",&op);
       return op;
     }
+
+
+
+
+
+int main() {
+
+    FILE *arquivo = fopen("task_sheet.txt", "rt");
+    if (arquivo == NULL) {
+        printf("Sem registros! Vamos começar uma nova.");
+        //
+
+    }
+
+
+
+}
