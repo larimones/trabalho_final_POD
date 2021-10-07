@@ -1,5 +1,7 @@
 // Alunos: Larissa e Andrew
 
+#include <windows.h>
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -197,9 +199,6 @@ void updateTask(Task *first, Task *last){
 	}
 }  
 
-
-
-
 /* void order(Task **l) {
     
     Task *aux = *l, *t;
@@ -242,6 +241,12 @@ void updateTask(Task *first, Task *last){
 
 
 
+
+/**
+ * @brief Imprime menu e retorna opção escolhida;
+ * 
+ * @return int 
+ */
 int menu()
 {
     int op = 0;
@@ -264,14 +269,93 @@ int menu()
 
 
 
-//  menu da aplicação e retorna a opção selecionada
+/**
+ * @brief faz upload dos dados para o arquivo;
+ * 
+ * @param first 
+ */
+void uploadData(Task *first) {
+  Task *aux;
+  FILE *arquivo = fopen("task_sheet.txt", "wt");
+
+  for (aux = first; aux!=NULL; aux = aux->next){
+    fprintf(arquivo, "Tarefa: %s - Data: %d / %d - Prioridade: %d\n", aux->name, aux->delivery.dia, aux->delivery.mes, aux->priority);
+  }
+  
+  fclose(arquivo);
+}
+
+
+
+/**
+ * @brief Faz o download dos dados do arquivo;
+ * 
+ * @param arqv 
+ * @param first 
+ * @return Task* 
+ */
+Task *downloadData(FILE *arqv, Task *first) {
+
+  Task *aux, *last;
+  
+  char name[100];
+  int dia, mes, priority;
+
+  while ((fscanf(arqv, "Tarefa: %s - Data: %d / %d - Prioridade: %d\n", &name, &dia, &mes, &priority))!= EOF) {
+    
+    Task *NEW = malloc(sizeof(Task));
+    strcpy(NEW->name, name);
+    NEW->delivery.dia = dia;
+    NEW->delivery.mes = mes;
+    NEW->priority = priority;
+
+    NEW->next = NULL;
+    NEW->prev = NULL;
+
+    if (first == NULL)
+    {
+      first = NEW;
+    } else
+    if (first != NULL)
+    {
+      last = getLast(first); //recupera o ultimo elemento da lista
+      last->next = NEW;
+      NEW->prev = last;
+    }
+  }
+  return first;
+}
+
+
+
+/**
+ * @brief Main;
+ * 
+ * @return int 
+ */
 int main()
 {  
+
   int op = EXIT+1;
   char deletechar[50];
   char searchTask [50];
   
   Task *first = NULL, *last = NULL;
+
+
+
+  FILE *arquivoE = fopen("task_sheet.txt", "rt");
+    if (arquivoE == NULL) {
+        printf("Sem registros de tarefas antigas!\n\n");
+
+    } else {
+      first = downloadData(arquivoE, first);
+      /*Passa o arquivo para lista encadeada;**/
+    }
+    fclose(arquivoE);
+
+
+  
 
   op = menu();
   while (op != EXIT) //exit = 10
@@ -311,7 +395,34 @@ int main()
 
 
 
+  if (first == NULL){
+    printf("Não ha mais registros! Encerrando");
 
-  printf("\n"); 
+    /*Loading*/
+    for(int i = 0; i < 3; i++) {
+      Sleep(500);
+      printf(".");
+    }
+    printf("    :)");
+
+
+
+  } else {
+    printf("\n\nGuardando suas tarefas");
+
+    /*Loading*/
+    for(int i = 0; i < 3; i++) {
+      Sleep(500);
+      printf(".");
+    }
+    printf("    :)");
+
+
+    uploadData(first); // Manda os dados para o arqv;
+  }
+
+
   return 0;
 }
+
+
