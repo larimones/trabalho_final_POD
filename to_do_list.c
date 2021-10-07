@@ -51,32 +51,39 @@ Task *getLast(Task *first) {
  */
 Task *newTask(Task *first) {
 
-    Task *NEW, *text;
-    NEW = (Task *)malloc(sizeof(Task));
+    Task *last;
+    Task *NEW = malloc(sizeof(Task));
+    
 
     printf("\n-------------- Cadastrando nova tarefa ----------------\n\n");
 
     printf("NOME DA TAREFA:\n");
     scanf("%s", NEW->name);
 
-    printf("\nDATA DE SUBMISSAO:"); 
+    printf("DATA DE SUBMISSAO:\n"); 
     scanf("%d/%d",&NEW->delivery.dia, &NEW->delivery.mes);
 
-    printf("PRIORIDADE: \n 1- BAIXA;\n 2- MEDIA;\n 3- ALTA;\n ");
-    scanf("%d", NEW->priority); 
+    printf("PRIORIDADE: \n 1- BAIXA;\n 2- MEDIA;\n 3- ALTA;\n");
+    scanf("%d", &NEW->priority); 
 
     NEW->next = NULL;
     NEW->prev = NULL;
 
-    if (first == NULL){ 
-      return NEW; // NEW = primeiro elemento
-    }    
+    printf("\nTarefa adicionada com sucesso!\n");
 
-    text = getLast(first); //text = último elemento;
-    text->next = NEW;
-    NEW->prev = text;
-
-    return first;
+    if (first == NULL)
+		{
+			first = NEW;
+			return first;
+		} else
+		if (first != NULL)
+		{
+			last = getLast(first); //recupera o ultimo elemento da lista
+			last->next = NEW;
+			NEW->prev = last;
+			return first;
+		}
+		return first;
 }
 
 
@@ -95,17 +102,25 @@ Task *deleteTask(Task *first, Task *last, char deletechar[50]){
 
   for(text = first; text != NULL; text = text->next){
     if ((strcmp(text->name, deletechar)) == 0){
-			if (text == head){ //caso a task seja a primeira da lista
-				first = text->next;
-				text->next->prev = NULL;
+			if (text == first){ //caso a task seja a primeira da lista
+        if(text->next == NULL) {
+          first=NULL;
+          free(text);
+          printf("\n- Tarefa deletada! -\n");
+          return first;
+        } else {
+          first = text->next;
+          text->next->prev = NULL;
+        }
 			} else
-			if (text == last){
-				text->prev->next=NULL;
-			} else {
-				text->prev->next=text->next;
-				text->next->prev=text->prev;
-			}
+        if (text == last){
+          text->prev->next=NULL;
+        } else {
+          text->prev->next=text->next;
+          text->next->prev=text->prev;
+        }
 			free(text);
+      printf("\n- Tarefa deletada! -\n");
 		}
   }
   return first;
@@ -125,7 +140,7 @@ Task *deleteTask(Task *first, Task *last, char deletechar[50]){
 
   for (aux = first; aux!=NULL; aux=aux->next){ //percorre a lista
     if(strcmp(aux->name, searchTask) == 0){ //ACHOU!
-      printf("NOME DA TAREFA: %s, \n", aux->name);
+      printf("\nNOME DA TAREFA: %s, \n", aux->name);
       printf("DATA DE SUBMISSAO: %d/%d, \n", aux->delivery.dia, aux->delivery.mes);
       printf ("PRIORIDADE - ");
       if( aux->priority == 1){
@@ -139,10 +154,10 @@ Task *deleteTask(Task *first, Task *last, char deletechar[50]){
       {
         printf("alta - \n");
       }
-      break;
+      return;
     }
 	}
-  printf("Nao encontramos essa tarefa! :)")
+  printf("Nao encontramos essa tarefa! :)");
 }
 
  
@@ -155,19 +170,19 @@ Task *deleteTask(Task *first, Task *last, char deletechar[50]){
  * @param first 
  * @param last 
  */
-void updateTask(Task **first, Task **last){
-	Task *aux = *first;
+void updateTask(Task *first, Task *last){
+	Task *aux = first;
 
   char updatechar[50];
   printf("Digite o nome da tarefa que deseja editar:\n");
   scanf("%s", updatechar);
 
-  if (aux==NULL){
+  if (aux == NULL){
     printf("Lista Vazia!\n");
-    break;
+    return;
   }
 
-  for (aux=head; aux!=NULL; aux=aux->next){ //percorre a lista
+  for (aux = first; aux!=NULL; aux=aux->next){ //percorre a lista
     if(strcmp(aux->name, updatechar) == 0){ //ACHOU!
       printf("\n\n - Achamos sua tarefa!\n\n");
 
@@ -229,22 +244,19 @@ void updateTask(Task **first, Task **last){
 
 int menu()
 {
-    int op=0;
-    while (op!=EXIT)
-    {
-      printf("\n=============== WELCOME TO YOUR TASKS ===================\n");
-      printf("|| 1 - Criar nova tarefa;                               ||\n");
-      printf("|| 2 - Deletar tarefa;                                  ||\n");
-      printf("|| 3 - Atualizar prioridade e data de entrega;          ||\n");
-      printf("|| 4 - Listar todas as tarefas;                         ||\n");
-      printf("|| 5 - Procurar tarefa por nome;                        ||\n");
-      printf("|| 10 - Finaliza;                                       ||\n");
-      printf("==========================================================\n");
-  
-      printf("\n: ");
-      scanf("%d",&op);
-       
-    }
+    int op = 0;
+    printf("\n=============== WELCOME TO YOUR TASKS ===================\n");
+    printf("|| 1 - Criar nova tarefa;                               ||\n");
+    printf("|| 2 - Deletar tarefa;                                  ||\n");
+    printf("|| 3 - Atualizar prioridade e data de entrega;          ||\n");
+    printf("|| 4 - Listar todas as tarefas;                         ||\n");
+    printf("|| 5 - Procurar tarefa por nome;                        ||\n");
+    printf("|| 10 - Finaliza;                                       ||\n");
+    printf("==========================================================\n");
+
+    printf("\n: ");
+    scanf("%d",&op);
+
     return op;
 }
 
@@ -255,7 +267,7 @@ int menu()
 //  menu da aplicação e retorna a opção selecionada
 int main()
 {  
-  int op;
+  int op = EXIT+1;
   char deletechar[50];
   char searchTask [50];
   
@@ -269,16 +281,18 @@ int main()
 /*------------------------------------------*/
       case 1: // Cria nova task
 				first = newTask(first);
+        last = getLast(first);
 				break;
 /*------------------------------------------*/
       case 2: // Deleta uma task dado o nome
         printf("Nome da tarefa de deseja deletar: \n");
 			  scanf("%s", deletechar);
-        first = deleteTask(first, deletechar); 
+        first = deleteTask(first, last, deletechar); 
+        last = getLast(first);
 				break;
 /*------------------------------------------*/
       case 3: //Atualiza uma task dado o nome
-				updateTask(&first, &last);
+				updateTask(first, last);
 				break;
 /*------------------------------------------*/
       case 4: //Imprime as task em ordem alfabetica
@@ -292,13 +306,12 @@ int main()
 				break;
 /*------------------------------------------*/
     }
-		op=menu(); //releitura do menu
-  } 
+		op = menu(); //releitura do menu
+  }
 
 
 
 
   printf("\n"); 
-  printf("¯ \ _ (ツ) _ / ¯\n: "); 
   return 0;
 }
