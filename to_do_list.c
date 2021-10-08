@@ -199,46 +199,65 @@ void updateTask(Task *first, Task *last){
 	}
 }  
 
-/* void order(Task **l) {
+/**
+ * @brief -> printa a lista inteira;
+ * 
+ * @param first -> primeiro elemento da lista;
+ */
+void printList(Task *first){
+	Task *aux = first;
+
+  if (aux == NULL){
+    printf("Lista Vazia!\n");
+    return;
+  }
+
+  for (aux = first; aux!=NULL; aux=aux->next){ //percorre a lista
+    printf("------------------------------------\n");
+    printf("-Tarefa: %s \n-Data de entrega: %d/%d \n-Nivel de prioridade: %d \n", aux->name, aux->delivery.dia, aux->delivery.mes, aux->priority);
+    printf("------------------------------------\n");
+  }
+}  
+
+
+
+/**
+ * @brief Ordena a lista;
+ * 
+ * @param first -> primeiro elemento da lista
+ */
+void bubblesort(Task **first) {
     
-    Task *aux = *l, *t;
-    char s[100], c[100];
-    int  d, e, f; 
+    Task *aux = *first, *temp;
+    char tempName[100];
+    int  tempD, tempM, tempP; 
  
     while(aux != NULL) {
-      t = aux->next;
-      while(t != NULL) {
-        if(strcmp(aux->name, t->name) > 0) { 
-            strcpy(s, aux->name);
-            strcpy(aux->nome, t->name);
-            strcpy(t->nome, s);
+      temp = aux->next;
+      while(temp != NULL) {
+        if(strcmp(aux->name, temp->name) > 0) { 
+            strcpy(tempName, aux->name);
+            strcpy(aux->name, temp->name);
+            strcpy(temp->name, tempName);
 
-            strcpy(c, aux-> prioridade);
-            strcpy(aux->prioridade, t->prioridade);
-            strcpy(t->prioridade, c);
+            tempD = aux->delivery.dia;
+            aux->delivery.dia = temp->delivery.dia;
+            temp->delivery.dia = tempD;
 
-            d = aux-> entrega.day;
-            aux->entrega.day = t->entrega.day;
-            t->entrega.day = d;
+            tempM = aux->delivery.mes;
+            aux->delivery.mes = temp->delivery.mes;
+            temp->delivery.mes = tempM;
 
-            e = aux-> entrega.month;
-            aux->entrega.month = t->entrega.month;
-            t->entrega.month = e;
-
-            f = aux-> entrega.year;
-            aux->entrega.year = t->entrega.year;
-            t->entrega.year = f;
+            tempP = aux->priority;
+            aux->priority = temp->priority;
+            temp->priority = tempP;
 
         }
-        t = t->next;
+        temp = temp->next;
       }
       aux = aux->next;
     }
 }
- */
-
-
-
 
 
 
@@ -256,6 +275,7 @@ int menu()
     printf("|| 3 - Atualizar prioridade e data de entrega;          ||\n");
     printf("|| 4 - Listar todas as tarefas;                         ||\n");
     printf("|| 5 - Procurar tarefa por nome;                        ||\n");
+    printf("|| 6 - Ordenar e listar tarefas;                        ||\n");
     printf("|| 10 - Finaliza;                                       ||\n");
     printf("==========================================================\n");
 
@@ -264,9 +284,6 @@ int menu()
 
     return op;
 }
-
-
-
 
 
 /**
@@ -379,8 +396,18 @@ int main()
 				updateTask(first, last);
 				break;
 /*------------------------------------------*/
-      case 4: //Imprime as task em ordem alfabetica
-				printf("Tarefas em ordem alfabetica:");
+      case 4: //Lista as tarefas;
+        printf("\n");
+
+        /*Loading*/
+        for(int i = 0; i < 3; i++) {
+          Sleep(500);
+          printf(".");
+        }
+
+        printf("Tarefas:");        
+        printList(first);
+        printf("\n");
 				break;
 /*------------------------------------------*/
       case 5: //
@@ -389,6 +416,19 @@ int main()
         printTask(first, searchTask);
 				break;
 /*------------------------------------------*/
+      case 6: //ordena e lista as tarefas
+        printf("Ordenando");
+
+        /*Loading*/
+        for(int i = 0; i < 3; i++) {
+          Sleep(500);
+          printf(".");
+        }
+        bubblesort(&first);
+        printf("Tarefas ordenadas! Confira a seguir:\n\n");        
+        printList(first);
+        printf("\n");
+				break;
     }
 		op = menu(); //releitura do menu
   }
