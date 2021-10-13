@@ -1,4 +1,8 @@
-// Alunos: Larissa e Andrew
+// Andrew Gabriel  (andrew.gabrielgomes@gmail.com)
+// Larissa Mones  (larissamones12@gmail.com)
+
+
+
 
 #include <windows.h>
 #include <time.h>
@@ -6,6 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 #define EXIT 10
+
+
 
 
 /**
@@ -16,6 +22,7 @@ typedef struct {
   int dia;
   int mes;
 } Date;
+
 
 
 /**
@@ -31,8 +38,9 @@ struct task_sheet {
 typedef struct task_sheet Task;
 
 
+
 /**
- * @brief Get the Last object
+ * @brief -> Get the Last object
  * 
  * @param al 
  * @return Task* 
@@ -46,7 +54,7 @@ Task *getLast(Task *first) {
 
 
 /**
- * @brief Create a new task
+ * @brief -> Create a new task
  * 
  * @param first 
  * @return Task* 
@@ -91,12 +99,12 @@ Task *newTask(Task *first) {
 
 
 /**
- * @brief Delete task
+ * @brief -> Delete task
  * 
  * @param first -> PRIMEIRO ELEMENTO;
  * @param deletechar -> TASK QUE VAI SER DELETADA;
  * @param last -> ULTIMO ELEMENTO
- * @return first;
+ * @return -> first;
  */
 Task *deleteTask(Task *first, Task *last, char deletechar[50]){
 
@@ -131,7 +139,7 @@ Task *deleteTask(Task *first, Task *last, char deletechar[50]){
 
 
 /**
- * @brief Procura determinada task e imprime suas informações;
+ * @brief -> Procura determinada task e imprime suas informações;
  * 
  * @param first -> head da lista;
  * @param searchTask -> task a ser procurada;
@@ -164,10 +172,8 @@ Task *deleteTask(Task *first, Task *last, char deletechar[50]){
 
  
 
-
-
 /**
- * @brief Atualiza determinada task;
+ * @brief -> Atualiza determinada task;
  * 
  * @param first 
  * @param last 
@@ -199,6 +205,8 @@ void updateTask(Task *first, Task *last){
 	}
 }  
 
+
+
 /**
  * @brief -> printa a lista inteira;
  * 
@@ -214,15 +222,20 @@ void printList(Task *first){
 
   for (aux = first; aux!=NULL; aux=aux->next){ //percorre a lista
     printf("------------------------------------\n");
-    printf("-Tarefa: %s \n-Data de entrega: %d/%d \n-Nivel de prioridade: %d \n", aux->name, aux->delivery.dia, aux->delivery.mes, aux->priority);
+    printf("- Tarefa: %s \n- Data de entrega: %d/%d \n- Nivel de prioridade: %d \n", aux->name, aux->delivery.dia, aux->delivery.mes, aux->priority);
     printf("------------------------------------\n");
   }
 }  
 
-
+/** USO DO STRCMP PARA ORDENAÇÃO:
+ * 
+  *   -1 indicando que o parâmetro 1 é menor que o parâmetro 2;
+  *   0 indicando que os parâmetros são iguais;
+  *   1 caso o primeiro seja maior que o segundo parâmetro.
+ */
 
 /**
- * @brief Ordena a lista;
+ * @brief -> Ordena a lista;
  * 
  * @param first -> primeiro elemento da lista
  */
@@ -235,7 +248,7 @@ void bubblesort(Task **first) {
     while(aux != NULL) {
       temp = aux->next;
       while(temp != NULL) {
-        if(strcmp(aux->name, temp->name) > 0) { 
+        if(strcmp(aux->name, temp->name) > 0) { //SE AUX NAME FOR MAIOR QUE O TEMP NAME;
             strcpy(tempName, aux->name);
             strcpy(aux->name, temp->name);
             strcpy(temp->name, tempName);
@@ -253,16 +266,16 @@ void bubblesort(Task **first) {
             temp->priority = tempP;
 
         }
-        temp = temp->next;
+        temp = temp->next; //APONTEIRAMENTO COMO NO BUBBLE
       }
-      aux = aux->next;
+      aux = aux->next; //APONTEIRAMENTO COMO NO BUBBLE
     }
 }
 
 
 
 /**
- * @brief Imprime menu e retorna opção escolhida;
+ * @brief -> Imprime menu e retorna opção escolhida;
  * 
  * @return int 
  */
@@ -286,8 +299,9 @@ int menu()
 }
 
 
+
 /**
- * @brief faz upload dos dados para o arquivo;
+ * @brief -> faz upload dos dados para o arquivo;
  * 
  * @param first 
  */
@@ -305,7 +319,7 @@ void uploadData(Task *first) {
 
 
 /**
- * @brief Faz o download dos dados do arquivo;
+ * @brief -> Faz o download dos dados do arquivo;
  * 
  * @param arqv 
  * @param first 
@@ -363,7 +377,7 @@ int main()
 
   FILE *arquivoE = fopen("task_sheet.txt", "rt");
     if (arquivoE == NULL) {
-        printf("Sem registros de tarefas antigas!\n\n");
+        printf("\n\n - Sem registros de tarefas antigas! -\n\n");
 
     } else {
       first = downloadData(arquivoE, first);
@@ -371,32 +385,33 @@ int main()
     }
     fclose(arquivoE);
 
-
-  
-
   op = menu();
   while (op != EXIT) //exit = 10
   {
     switch(op)
     {
 /*------------------------------------------*/
-      case 1: // Cria nova task
+      case 1: // Cria nova task;
+
 				first = newTask(first);
         last = getLast(first);
 				break;
 /*------------------------------------------*/
-      case 2: // Deleta uma task dado o nome
+      case 2: // Deleta uma task dado o nome;
+
         printf("Nome da tarefa de deseja deletar: \n");
 			  scanf("%s", deletechar);
         first = deleteTask(first, last, deletechar); 
         last = getLast(first);
 				break;
 /*------------------------------------------*/
-      case 3: //Atualiza uma task dado o nome
+      case 3: //Atualiza uma task dado o nome;
+
 				updateTask(first, last);
 				break;
 /*------------------------------------------*/
       case 4: //Lista as tarefas;
+
         printf("\n");
 
         /*Loading*/
@@ -410,13 +425,13 @@ int main()
         printf("\n");
 				break;
 /*------------------------------------------*/
-      case 5: //
+      case 5: //Printa determinada tarefa
         printf("Nome da tarefa para ser buscada:");
 				scanf("%s", searchTask);
         printTask(first, searchTask);
 				break;
 /*------------------------------------------*/
-      case 6: //ordena e lista as tarefas
+      case 6: // Ordena e lista as tarefas
         printf("Ordenando");
 
         /*Loading*/
@@ -424,19 +439,21 @@ int main()
           Sleep(500);
           printf(".");
         }
+
         bubblesort(&first);
         printf("Tarefas ordenadas! Confira a seguir:\n\n");        
         printList(first);
         printf("\n");
 				break;
+/*------------------------------------------*/
     }
-		op = menu(); //releitura do menu
+		op = menu(); //Releitura do menu
   }
 
 
-
   if (first == NULL){
-    printf("Não ha mais registros! Encerrando");
+    printf("Nao ha mais registros! Encerrando");
+
 
     /*Loading*/
     for(int i = 0; i < 3; i++) {
@@ -464,5 +481,3 @@ int main()
 
   return 0;
 }
-
-
