@@ -2,8 +2,6 @@
 // Larissa Mones  (larissamones12@gmail.com)
 
 
-
-
 #include <windows.h>
 #include <time.h>
 #include <stdio.h>
